@@ -51,7 +51,7 @@ function Header({ active, bagCount }) {
   <div className="utility-strip"><span>Handwoven in Kerala</span><span>Free delivery across India on orders over ₹5,000</span><a href={instagramUrl} target="_blank" rel="noreferrer">@auraform.studio ↗</a></div>
   <header className="site-header">
     <button className="menu-toggle" aria-label="Open menu" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
-    <a className="brand" href="#/"><span className="brand-name">AURA FORM</span><span className="brand-sub">കേരളം · KERALA</span></a>
+      <a className="brand" href="#/"><span className="brand-name">SAREE KADA</span><span className="brand-sub">കേരളം · KERALA</span></a>
     <nav className={`main-nav ${menuOpen ? 'open' : ''}`} aria-label="Main navigation">
       <a className={active === 'shop' ? 'active' : ''} href="#/shop" onClick={() => setMenuOpen(false)}>Shop</a>
       <a className={active === 'about' ? 'active' : ''} href="#/about" onClick={() => setMenuOpen(false)}>About</a>
@@ -66,7 +66,7 @@ function Header({ active, bagCount }) {
 }
 
 function Footer() {
-  return <footer className="site-footer"><span>© 2024 Aura Form Studio</span><span>Made with attention in Kerala</span><a href={instagramUrl} target="_blank" rel="noreferrer">Follow @auraform.studio ↗</a></footer>;
+  return <footer className="site-footer"><span>© 2024 Saree Kada</span><span>Made with attention in Kerala</span><a href={instagramUrl} target="_blank" rel="noreferrer">Follow @auraform.studio ↗</a></footer>;
 }
 
 function ProductCard({ product }) {
@@ -100,7 +100,7 @@ function Shop({ bagCount }) {
 function ProductDetail({ product, bagCount, onAdd }) {
   const products = useContext(CatalogContext);
   const [size, setSize] = useState('Free');
-  return <Page active="shop" bagCount={bagCount}><main><div className="detail-layout"><div className="detail-gallery">{product.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${product.name}, view ${index + 1}`} />)}</div><aside className="detail-info"><span className="eyebrow">Aura Form / 0{products.indexOf(product) + 1}</span><h1>{product.name}</h1><span className="detail-price">{product.price}</span><p className="detail-copy">A five-metre handwoven saree with an easy drape, a clean blouse piece, and a border that carries the quiet ceremony of Kerala dressing.</p><div className="detail-rule"><div className="option-label"><span>Length</span><span>{size}</span></div><div className="sizes">{['Free', '5.5m', '6m'].map(option => <button className={`size ${size === option ? 'selected' : ''}`} key={option} onClick={() => setSize(option)}>{option}</button>)}</div></div><button className="add-button" onClick={onAdd}>Add to bag — {product.price}</button><div className="detail-note"><span>Free delivery over ₹5,000</span><span>Blouse piece included</span></div><div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description ↗</a></div></aside></div></main></Page>;
+  return <Page active="shop" bagCount={bagCount}><main><div className="detail-layout"><div className="detail-gallery">{product.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${product.name}, view ${index + 1}`} />)}</div><aside className="detail-info"><span className="eyebrow">Saree Kada / 0{products.indexOf(product) + 1}</span><h1>{product.name}</h1><span className="detail-price">{product.price}</span><p className="detail-copy">A five-metre handwoven saree with an easy drape, a clean blouse piece, and a border that carries the quiet ceremony of Kerala dressing.</p><div className="detail-rule"><div className="option-label"><span>Length</span><span>{size}</span></div><div className="sizes">{['Free', '5.5m', '6m'].map(option => <button className={`size ${size === option ? 'selected' : ''}`} key={option} onClick={() => setSize(option)}>{option}</button>)}</div></div><button className="add-button" onClick={onAdd}>Add to bag — {product.price}</button><div className="detail-note"><span>Free delivery over ₹5,000</span><span>Blouse piece included</span></div><div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description ↗</a></div></aside></div></main></Page>;
 }
 
 function Description({ product, bagCount }) {
@@ -108,7 +108,7 @@ function Description({ product, bagCount }) {
 }
 
 function About({ bagCount }) {
-  return <Page active="about" bagCount={bagCount}><main><section className="about-intro"><span className="eyebrow">About Aura Form · കൊച്ചി</span><h1>Clothing<br />with <em>clarity.</em></h1><p>We make fewer, better things for a life in motion. A wardrobe with space to breathe.</p><span className="about-mark">Theyyam<br />2018<br /><b>KOCHI</b></span></section><div className="about-image"><img src={heroImage} alt="Woman in a handwoven Kerala saree" /><span className="image-caption">Saree study / Kasavu, cotton, light</span></div><section className="about-grid"><h2>A practice in restraint.</h2><div><p>Aura Form is an independent clothing studio rooted in Kochi. Our point of view comes from Kerala's coast: generous, tactile, and attuned to the weather.</p><p>We work with small weaving communities, natural fibers, and the patient pace of handwork. The drama belongs to the cloth: a kasavu border, a Theyyam red, a Kathakali green.</p><a className="about-social" href={instagramUrl} target="_blank" rel="noreferrer">Follow the studio journal on Instagram ↗</a><div className="quote"><span className="eyebrow">A note from the studio</span><p>“Good clothes do not ask for attention. They give it back to you.”</p></div></div></section></main></Page>;
+  return <Page active="about" bagCount={bagCount}><main><section className="about-intro"><span className="eyebrow">About Saree Kada · കൊച്ചി</span><h1>Clothing<br />with <em>clarity.</em></h1><p>We make fewer, better things for a life in motion. A wardrobe with space to breathe.</p><span className="about-mark">Theyyam<br />2018<br /><b>KOCHI</b></span></section><div className="about-image"><img src={heroImage} alt="Woman in a handwoven Kerala saree" /><span className="image-caption">Saree study / Kasavu, cotton, light</span></div><section className="about-grid"><h2>A practice in restraint.</h2><div><p>Saree Kada is an independent clothing studio rooted in Kochi. Our point of view comes from Kerala's coast: generous, tactile, and attuned to the weather.</p><p>We work with small weaving communities, natural fibers, and the patient pace of handwork. The drama belongs to the cloth: a kasavu border, a Theyyam red, a Kathakali green.</p><a className="about-social" href={instagramUrl} target="_blank" rel="noreferrer">Follow the studio journal on Instagram ↗</a><div className="quote"><span className="eyebrow">A note from the studio</span><p>“Good clothes do not ask for attention. They give it back to you.”</p></div></div></section></main></Page>;
 }
 
 function Journal({ bagCount }) {
