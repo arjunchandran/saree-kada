@@ -11,6 +11,10 @@ Little Sree is a site-scoped AI guide for Saree Kada. It answers from the on-sit
 
 For production, run `npm run build` followed by `npm start`. The server serves the built site and the `/api/chat` endpoint from the same origin. Set `GOOGLE_API_KEY` in the hosting provider's server environment; do not put it in a `VITE_` variable.
 
+### Netlify
+
+The repository includes a Netlify Function for `/api/chat`. In the Netlify site dashboard, add `GOOGLE_API_KEY` under **Project configuration → Environment variables**, make it available to Functions, then trigger a new deploy. `GOOGLE_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. Never commit `.env` or place the API key in a `VITE_` variable.
+
 ### Notebook
 
 Open `Little_Sree_Chat_Agent.ipynb` from the repository root, run its cells from top to bottom, and provide `GOOGLE_API_KEY` in the local `.env` file. The first code cell installs the notebook dependencies; the final cell launches the Gradio chat.
