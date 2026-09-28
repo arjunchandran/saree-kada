@@ -1,5 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, lazy, Suspense, useContext, useEffect, useRef, useState } from 'react';
 import { fetchProducts } from './products';
+
+const KathakaliMiniature = lazy(() => import('./KathakaliMiniature'));
 
 const instagramUrl = 'https://www.instagram.com/auraform.studio/';
 const heroImage = 'https://images.pexels.com/photos/36962415/pexels-photo-36962415.jpeg?auto=compress&cs=tinysrgb&w=1600';
@@ -124,6 +126,71 @@ function Page({ active, bagCount, children }) {
   return <div className="page"><Header active={active} bagCount={bagCount} />{children}<Footer /></div>;
 }
 
+function LittleSree() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [messages, setMessages] = useState([{ role: 'assistant', content: "Namaskaram! I'm Little Sree, the Saree Kada site guide. Ask me about our sarees, materials, prices, or details published here." }]);
+  const messagesRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && messagesRef.current) messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+  }, [isOpen, messages, isSending]);
+
+  async function sendMessage(event) {
+    event.preventDefault();
+    const content = input.trim();
+    if (!content || isSending) return;
+
+    const nextMessages = [...messages, { role: 'user', content }];
+    setMessages(nextMessages);
+    setInput('');
+    setIsSending(true);
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: nextMessages })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Little Sree could not reply. Please try again.');
+      setMessages([...nextMessages, { role: 'assistant', content: result.reply }]);
+    } catch (error) {
+      setMessages([...nextMessages, { role: 'assistant', content: error.message || 'Little Sree could not reply. Please try again.' }]);
+    } finally {
+      setIsSending(false);
+    }
+  }
+
+  return <div className="little-sree-widget">
+    {isOpen && <section className="little-sree-panel" id="little-sree-panel" role="dialog" aria-modal="false" aria-labelledby="little-sree-title">
+      <header className="little-sree-header">
+        <span className="little-sree-mark" aria-hidden="true">LS</span>
+        <div><h2 id="little-sree-title">Little Sree</h2><span>Your Saree Kada guide</span></div>
+        <button className="little-sree-close" type="button" aria-label="Close Little Sree chat" onClick={() => setIsOpen(false)}>×</button>
+      </header>
+      <div className="little-sree-messages" ref={messagesRef} role="log" aria-live="polite" aria-relevant="additions text">
+        {messages.map((message, index) => <p className={`little-sree-message ${message.role}`} key={`${index}-${message.role}`}>{message.content}</p>)}
+        {isSending && <p className="little-sree-message assistant typing" aria-label="Little Sree is typing">Little Sree is thinking...</p>}
+      </div>
+      <form className="little-sree-form" onSubmit={sendMessage}>
+        <input value={input} onChange={event => setInput(event.target.value)} placeholder="Ask about Saree Kada..." aria-label="Message Little Sree" maxLength={1000} disabled={isSending} />
+        <button type="submit" aria-label="Send message" disabled={!input.trim() || isSending}>Send</button>
+      </form>
+      <span className="little-sree-note">AI guide · Saree Kada topics only</span>
+    </section>}
+    {!isOpen && <button className="little-sree-launcher" type="button" aria-expanded={false} aria-controls="little-sree-panel" onClick={() => setIsOpen(true)}>
+      <Suspense fallback={<span className="kathakali-loading" aria-hidden="true" />}>
+        <KathakaliMiniature />
+      </Suspense>
+      <span className="little-sree-launcher-copy">
+        <strong>Little Sree</strong>
+        <small>Ask about saree stories</small>
+      </span>
+    </button>}
+  </div>;
+}
+
 function App() {
   const [bagCount, setBagCount] = useState(0);
   const [route, setRoute] = useState(window.location.hash);
@@ -140,6 +207,7 @@ function App() {
     {parts[0] === 'product' && parts[2] && <Description product={product} bagCount={bagCount} />}
     {parts[0] === 'product' && !parts[2] && <ProductDetail product={product} bagCount={bagCount} onAdd={() => setBagCount(count => count + 1)} />}
     {!parts[0] && <Home bagCount={bagCount} />}
+    <LittleSree />
   </CatalogContext.Provider>;
 }
 

@@ -174,7 +174,45 @@ img { display: block; width: 100%; object-fit: cover; }
 .toast { background: var(--ink); bottom: 24px; color: white; font-family: var(--mono); font-size: 11px; left: 50%; letter-spacing: .08em; opacity: 0; padding: 15px 20px; pointer-events: none; position: fixed; text-transform: uppercase; transform: translate(-50%, 20px); transition: opacity .25s, transform .25s; z-index: 20; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+.little-sree-widget { color: var(--ink); }
+.little-sree-launcher { background: transparent; border: 0; bottom: 20px; color: var(--ink); display: block; height: 142px; padding: 0; position: fixed; right: 22px; text-align: left; transition: transform .25s; width: 274px; z-index: 31; }
+.little-sree-launcher:hover { transform: translateY(-3px); }
+.little-sree-launcher:hover .kathakali-figure { transform: translateY(-2px); }
+.little-sree-launcher-copy { align-items: flex-start; background: #fffdf7; border: 1px solid var(--kasavu); border-radius: 10px 10px 10px 3px; box-shadow: 0 8px 24px rgba(18, 18, 18, .17); display: flex; flex-direction: column; gap: 5px; left: 0; padding: 11px 38px 11px 13px; position: absolute; top: 8px; width: 176px; z-index: 3; }
+.little-sree-launcher-copy::after { border-bottom: 10px solid #fffdf7; border-right: 10px solid transparent; bottom: -7px; content: ''; filter: drop-shadow(1px 1px 0 var(--kasavu)); height: 0; left: 22px; position: absolute; transform: rotate(45deg); width: 0; }
+.little-sree-launcher-copy strong { color: var(--backwater); font-family: var(--serif); font-size: 17px; font-weight: 700; line-height: 1.1; }
+.little-sree-launcher-copy small { color: var(--muted); font-family: var(--sans); font-size: 10px; white-space: nowrap; }
+.kathakali-stage { background: transparent; bottom: 0; height: 128px; overflow: visible; position: absolute; right: 2px; width: 108px; z-index: 1; }
+.kathakali-canvas { display: block; height: 100%; inset: 0; position: absolute; width: 100%; }
+.kathakali-canvas canvas { display: block; height: 100%; width: 100%; }
+.kathakali-loading { background: linear-gradient(110deg, transparent 25%, rgba(255, 244, 194, .35) 48%, transparent 72%); inset: 0; position: absolute; }
+.little-sree-panel { animation: littleSreeIn .2s ease both; background: #fff; border: 1px solid var(--line); bottom: 88px; box-shadow: 0 18px 54px rgba(18, 18, 18, .22); display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; height: min(560px, calc(100dvh - 120px)); position: fixed; right: 24px; width: min(380px, calc(100vw - 32px)); z-index: 30; }
+@keyframes littleSreeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.little-sree-header { align-items: center; background: var(--backwater); color: white; display: flex; gap: 12px; padding: 16px; }
+.little-sree-mark { align-items: center; border: 1px solid var(--kasavu); border-radius: 50%; color: var(--kasavu); display: flex; flex: 0 0 38px; font-family: var(--mono); font-size: 11px; height: 38px; justify-content: center; }
+.little-sree-header h2 { font-family: var(--serif); font-size: 18px; font-weight: 700; line-height: 1.1; margin: 0 0 4px; }
+.little-sree-header div span { color: rgba(255, 255, 255, .76); font-family: var(--mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; }
+.little-sree-close { background: none; border: 0; color: white; font-size: 25px; line-height: 1; margin-left: auto; padding: 4px 7px; }
+.little-sree-messages { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; padding: 18px 14px; }
+.little-sree-message { border: 1px solid rgba(18, 18, 18, .08); border-radius: 8px; font-size: 13px; line-height: 1.5; margin: 0; max-width: 88%; padding: 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.little-sree-message.assistant { align-self: start; background: var(--paper); }
+.little-sree-message.user { align-self: end; background: var(--backwater); border-color: var(--backwater); color: white; }
+.little-sree-message.typing { color: var(--muted); font-style: italic; }
+.little-sree-form { align-items: center; border-top: 1px solid var(--line); display: flex; gap: 9px; padding: 12px; }
+.little-sree-form input { background: var(--paper); border: 1px solid var(--line); border-radius: 2px; min-width: 0; outline-color: var(--backwater); padding: 11px 10px; width: 100%; }
+.little-sree-form input:disabled { opacity: .7; }
+.little-sree-form button { background: var(--theyyam); border: 0; color: white; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding: 12px 14px; text-transform: uppercase; }
+.little-sree-form button:disabled { cursor: not-allowed; opacity: .45; }
+.little-sree-note { color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .06em; padding: 0 13px 12px; text-transform: uppercase; }
+.little-sree-widget button:focus-visible, .little-sree-widget input:focus-visible { outline: 2px solid var(--kasavu); outline-offset: 2px; }
+
 @media (max-width: 700px) {
+  .little-sree-launcher { bottom: 12px; height: 132px; right: 12px; width: 238px; }
+  .kathakali-stage { height: 116px; width: 96px; }
+  .little-sree-launcher-copy { padding: 10px 35px 10px 11px; width: 162px; }
+  .little-sree-launcher-copy strong { font-size: 15px; }
+  .little-sree-launcher-copy small { font-size: 9px; }
+  .little-sree-panel { bottom: 76px; height: min(560px, calc(100dvh - 92px)); right: 14px; width: calc(100vw - 28px); }
   .site-header { height: 65px; padding: 0 5vw; }
   .utility-strip { gap: 12px; justify-content: center; min-height: 28px; padding: 0 5vw; }
   .utility-strip span:nth-child(2) { display: none; }
@@ -233,4 +271,7 @@ img { display: block; width: 100%; object-fit: cover; }
   .about-grid { display: block; padding: 80px 5vw; }
   .about-grid h2 { margin-bottom: 45px; }
   .quote p { font-size: 25px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
 }

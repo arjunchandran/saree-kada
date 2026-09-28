@@ -4,14 +4,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node --env-file-if-exists=.env server.js",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node --env-file-if-exists=.env server.js --production"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "three": "^0.186.1",
     "vite": "latest"
   }
 }
