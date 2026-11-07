@@ -57,12 +57,12 @@ function Header({ active, bagCount }) {
     <nav className={`main-nav ${menuOpen ? 'open' : ''}`} aria-label="Main navigation">
       <a className={active === 'shop' ? 'active' : ''} href="#/shop" onClick={() => setMenuOpen(false)}>Shop</a>
       <a className={active === 'about' ? 'active' : ''} href="#/about" onClick={() => setMenuOpen(false)}>About</a>
-      <a href="#/journal" onClick={() => setMenuOpen(false)}>Journal</a>
+      <a className={active === 'journal' ? 'active' : ''} href="#/journal" onClick={() => setMenuOpen(false)}>Journal</a>
     </nav>
     <div className="header-actions">
       <button aria-label="Search">Search</button>
       <a className="instagram-link" href={instagramUrl} target="_blank" rel="noreferrer">Instagram ↗</a>
-      <button className="bag-button" aria-label="Shopping bag">Bag <span className="bag-count">{bagCount}</span></button>
+      <a className={`bag-button ${active === 'bag' ? 'active' : ''}`} href="#/bag" aria-label="Shopping bag">Bag <span className="bag-count">{bagCount}</span></a>
     </div>
   </header></>;
 }
@@ -107,6 +107,15 @@ function ProductDetail({ product, bagCount, onAdd }) {
 
 function Description({ product, bagCount }) {
   return <Page active="shop" bagCount={bagCount}><main><section className="description-hero"><div><span className="eyebrow">The story of the {product.name}</span><h1>Made for<br />the <em>in-between.</em></h1></div><div className="description-lede"><span className="eyebrow">01 / The idea</span><p>Not a costume. Not a trend. A handwoven saree you can live in, restyle, and return to for years.</p></div></section><section className="materials"><img className="materials-image" src={product.images[1]} alt={`Close view of ${product.name} saree fabric`} /><div className="materials-copy"><span className="eyebrow">02 / In the details · തെയ്യം</span><h2>Texture you<br />can feel.</h2><p>Inspired by Kerala's handloom tradition, the gold edge of a kasavu saree, and the vivid geometry of Theyyam, we choose cloth for the way it lives with you.</p><div className="spec-list"><div className="spec-row"><span>Composition</span><span>{product.composition}</span></div><div className="spec-row"><span>Woven in</span><span>{product.origin}</span></div><div className="spec-row"><span>Border</span><span>Hand-finished zari edge</span></div><div className="spec-row"><span>Care</span><span>Cold wash, hang dry</span></div><div className="spec-row"><span>Fit</span><span>5.5m saree + 0.8m blouse piece</span></div></div></div></section></main></Page>;
+}
+
+function BagPage({ bagItems, bagCount, onClear, onRemoveItem }) {
+  const subtotal = bagItems.reduce((sum, item) => {
+    const priceNumber = Number(String(item.price).replace(/[^\d]/g, '')) || 0;
+    return sum + (priceNumber * item.quantity);
+  }, 0);
+
+  return <Page active="bag" bagCount={bagCount}><main className="bag-page"><section className="page-intro"><span className="eyebrow">Your bag · കേരളം</span><h1>Collected with care.</h1></section>{bagItems.length === 0 ? <section className="empty-bag"><p>Your shopping bag is empty.</p><a className="primary-cta" href="#/shop">Continue shopping</a></section> : <section className="bag-layout"><div className="bag-items">{bagItems.map(item => <article className="bag-item" key={item.id}><div className="bag-item-image"><img src={products.find(product => product.id === item.id)?.images[0] || heroImage} alt={item.name} /></div><div className="bag-item-copy"><div><h2>{item.name}</h2><p>{item.color || 'Handwoven Kerala saree'}</p></div><div className="bag-item-meta"><span>Qty: {item.quantity}</span><button type="button" onClick={() => onRemoveItem(item.id)}>Remove</button></div></div><strong>{item.price}</strong></article>)}<button type="button" className="secondary-button" onClick={onClear}>Clear bag</button></div><aside className="bag-summary"><span className="eyebrow">Summary</span><div className="summary-row"><span>Subtotal</span><span>₹{subtotal.toLocaleString('en-IN')}</span></div><div className="summary-row"><span>Shipping</span><span>Calculated at checkout</span></div><div className="summary-row total"><span>Total</span><span>₹{subtotal.toLocaleString('en-IN')}</span></div><button type="button" className="primary-cta checkout-button">Proceed to checkout</button></aside></section>}</main></Page>;
 }
 
 function About({ bagCount }) {
@@ -192,9 +201,21 @@ function LittleSree() {
 }
 
 function App() {
-  const [bagCount, setBagCount] = useState(0);
+  const [bagItems, setBagItems] = useState([]);
   const [route, setRoute] = useState(window.location.hash);
   const [catalog, setCatalog] = useState(products);
+  const bagCount = bagItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  function addToBag(product) {
+    setBagItems(current => {
+      const item = current.find(entry => entry.id === product.id);
+      if (item) {
+        return current.map(entry => entry.id === product.id ? { ...entry, quantity: entry.quantity + 1 } : entry);
+      }
+      return [...current, { id: product.id, name: product.name, price: product.price, color: product.color, quantity: 1 }];
+    });
+  }
+
   useEffect(() => { const updateRoute = () => setRoute(window.location.hash); window.addEventListener('hashchange', updateRoute); return () => window.removeEventListener('hashchange', updateRoute); }, []);
   useEffect(() => { window.scrollTo(0, 0); }, [route]);
   useEffect(() => { fetchProducts().then(setCatalog).catch(() => setCatalog(products)); }, []);
@@ -204,8 +225,9 @@ function App() {
     {parts[0] === 'about' && <About bagCount={bagCount} />}
     {parts[0] === 'journal' && <Journal bagCount={bagCount} />}
     {parts[0] === 'shop' && <Shop bagCount={bagCount} />}
+    {parts[0] === 'bag' && <BagPage bagItems={bagItems} bagCount={bagCount} onClear={() => setBagItems([])} onRemoveItem={id => setBagItems(current => current.filter(item => item.id !== id))} />}
     {parts[0] === 'product' && parts[2] && <Description product={product} bagCount={bagCount} />}
-    {parts[0] === 'product' && !parts[2] && <ProductDetail product={product} bagCount={bagCount} onAdd={() => setBagCount(count => count + 1)} />}
+    {parts[0] === 'product' && !parts[2] && <ProductDetail product={product} bagCount={bagCount} onAdd={() => addToBag(product)} />}
     {!parts[0] && <Home bagCount={bagCount} />}
     <LittleSree />
   </CatalogContext.Provider>;

@@ -37,8 +37,12 @@ img { display: block; width: 100%; object-fit: cover; }
 .main-nav a:hover::after, .main-nav a.active::after { transform: scaleX(1); transform-origin: left; }
 .header-actions { align-items: center; display: flex; gap: 19px; }
 .header-actions button, .menu-toggle { background: none; border: 0; padding: 4px; }
+.header-actions a { color: inherit; }
 .instagram-link { border-bottom: 1px solid var(--theyyam); color: var(--theyyam); font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding-bottom: 3px; text-transform: uppercase; }
 .menu-toggle { display: none; font-size: 22px; }
+.bag-button { align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; display: inline-flex; font-family: var(--mono); font-size: 10px; gap: 8px; letter-spacing: .08em; padding: 8px 12px; text-transform: uppercase; }
+.bag-button.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+.bag-button.active .bag-count { background: #fff; color: var(--ink); }
 .bag-count { background: var(--blue); border-radius: 50%; color: #fff; display: inline-grid; font-size: 9px; height: 16px; margin-left: 2px; place-items: center; width: 16px; }
 
 .page { animation: pageIn .55s ease both; }
@@ -134,6 +138,29 @@ img { display: block; width: 100%; object-fit: cover; }
 .add-button { background: var(--blue); border: 0; color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; margin-top: 15px; padding: 19px; text-transform: uppercase; width: 100%; }
 .add-button:hover { background: var(--ink); }
 .detail-note { display: flex; font-size: 12px; justify-content: space-between; padding-top: 15px; }
+
+.bag-page { padding-bottom: 120px; }
+.empty-bag { align-items: center; background: #fff; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 22px; margin: 0 4vw 30px; padding: 54px 24px; text-align: center; }
+.empty-bag p { font-family: var(--serif); font-size: clamp(32px, 4vw, 54px); letter-spacing: -.05em; line-height: .95; margin: 0; }
+.empty-bag .primary-cta { justify-content: center; }
+.bag-layout { display: grid; gap: 32px; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 0.9fr); padding: 0 4vw 80px; }
+.bag-items { display: flex; flex-direction: column; gap: 18px; }
+.bag-item { align-items: center; background: #fff; border: 1px solid var(--line); display: grid; gap: 18px; grid-template-columns: 150px minmax(0, 1fr) auto; padding: 16px; }
+.bag-item-image { aspect-ratio: 4 / 5; background: var(--paper-deep); overflow: hidden; }
+.bag-item-image img { height: 100%; }
+.bag-item-copy { display: flex; justify-content: space-between; gap: 18px; }
+.bag-item-copy h2 { font-family: var(--serif); font-size: clamp(22px, 2.5vw, 38px); letter-spacing: -.04em; line-height: 1; margin: 0; }
+.bag-item-copy p { color: var(--muted); margin: 8px 0 0; }
+.bag-item-meta { align-items: flex-end; display: flex; flex-direction: column; gap: 8px; justify-content: space-between; }
+.bag-item-meta span { color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.bag-item-meta button { background: none; border: 0; color: var(--theyyam); font-family: var(--mono); font-size: 9px; letter-spacing: .08em; padding: 0; text-transform: uppercase; }
+.bag-item strong { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
+.secondary-button { background: #fff; border: 1px solid var(--line); font-family: var(--mono); font-size: 10px; letter-spacing: .1em; margin-top: 10px; padding: 14px 18px; text-transform: uppercase; }
+.bag-summary { align-self: start; background: var(--paper-deep); border: 1px solid var(--line); padding: 24px 22px; position: sticky; top: 110px; }
+.summary-row { border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; padding: 16px 0; }
+.summary-row span:first-child { color: var(--muted); }
+.summary-row.total { border-bottom: 0; font-family: var(--serif); font-size: 24px; letter-spacing: -.04em; padding-top: 22px; }
+.checkout-button { margin-top: 18px; width: 100%; justify-content: center; }
 
 .description-page { padding-bottom: 100px; }
 .description-hero { display: grid; gap: 8vw; grid-template-columns: 1fr 1fr; padding: 100px 4vw 105px; }
