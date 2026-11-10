@@ -68,7 +68,7 @@ function Header({ active, bagCount }) {
 }
 
 function Footer() {
-  return <footer className="site-footer"><span>© 2024 KishabySree</span><span>Made by Arjun</span><a href={instagramUrl} target="_blank" rel="noreferrer">Follow @auraform.studio ↗</a></footer>;
+  return <footer className="site-footer"><span>© 2024 KishabySree</span><a href={instagramUrl} target="_blank" rel="noreferrer">Follow @auraform.studio ↗</a></footer>;
 }
 
 function ProductCard({ product }) {
