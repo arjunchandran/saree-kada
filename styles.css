@@ -28,7 +28,8 @@ img { display: block; width: 100%; object-fit: cover; }
 .site-header { align-items: center; backdrop-filter: blur(14px); background: rgba(248, 250, 247, .92); border-bottom: 1px solid var(--line); display: flex; height: 76px; justify-content: space-between; padding: 0 4vw; position: sticky; top: 0; z-index: 10; }
 .utility-strip { align-items: center; background: var(--backwater); color: #fff; display: flex; font-family: var(--mono); font-size: 9px; justify-content: space-between; letter-spacing: .08em; min-height: 30px; padding: 0 4vw; text-transform: uppercase; }
 .utility-strip a { color: #e9d38b; }
-.brand { align-items: baseline; display: flex; gap: 9px; font-size: 19px; font-weight: 700; letter-spacing: .18em; }
+.brand { align-items: center; display: flex; gap: 9px; font-size: 19px; font-weight: 700; letter-spacing: .18em; }
+.brand-logo { border: 1px solid var(--line); border-radius: 50%; flex-shrink: 0; height: 36px; object-fit: cover; width: 36px; }
 .brand-sub { color: var(--backwater); font-family: var(--malayalam); font-size: 9px; font-weight: 500; letter-spacing: .04em; }
 .main-nav { display: flex; gap: 30px; margin-left: 8%; }
 .main-nav a, .header-actions button { font-size: 11px; letter-spacing: .13em; text-transform: uppercase; }
