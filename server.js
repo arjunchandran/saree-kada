@@ -72,7 +72,7 @@ async function handleChat(request, response) {
       return;
     }
 
-    sendJson(response, 200, { reply: result.choices?.[0]?.message?.content || 'I do not have an answer for that from the Saree Kada site.' });
+    sendJson(response, 200, { reply: result.choices?.[0]?.message?.content || 'I do not have an answer for that from the KishabySree site.' });
   } catch (error) {
     const status = error instanceof SyntaxError ? 400 : 500;
     sendJson(response, status, { error: status === 400 ? 'The chat request was not valid JSON.' : 'Little Sree could not reply just now. Please try again.' });
@@ -109,4 +109,4 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(port, () => console.log(`Saree Kada${isProduction ? '' : ' development'} server ready at http://localhost:${port}`));
+server.listen(port, () => console.log(`KishabySree${isProduction ? '' : ' development'} server ready at http://localhost:${port}`));

@@ -1,8 +1,8 @@
-# Saree Kada
+# KishabySree
 
 ## Little Sree
 
-Little Sree is a site-scoped AI guide for Saree Kada. It answers from the on-site catalog and published shopping details; it is not a general-purpose chatbot.
+Little Sree is a site-scoped AI guide for KishabySree. It answers from the on-site catalog and published shopping details; it is not a general-purpose chatbot.
 
 ### Website
 

@@ -54,7 +54,7 @@ export default async function chat(request) {
       return jsonResponse(502, { error: 'Little Sree could not reply just now. Please try again in a moment.' });
     }
 
-    return jsonResponse(200, { reply: result.choices?.[0]?.message?.content || 'I do not have an answer for that from the Saree Kada site.' });
+    return jsonResponse(200, { reply: result.choices?.[0]?.message?.content || 'I do not have an answer for that from the KishabySree site.' });
   } catch (error) {
     const statusCode = error instanceof SyntaxError ? 400 : 500;
     return jsonResponse(statusCode, {
