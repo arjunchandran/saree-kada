@@ -4,7 +4,7 @@ import { fetchProducts } from './products';
 const KathakaliMiniature = lazy(() => import('./KathakaliMiniature'));
 
 const instagramUrl = 'https://www.instagram.com/kishabysree/';
-const kishabySreeLogoUrl = 'https://scontent.cdninstagram.com/v/t51.82787-19/708793208_17890054092507164_1601287198135839969_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=100&ig_cache_key=GHhTPyocSDLP6I4-AOFsRAQ56jgWbmNDAQAB1501500j-ccb7-5&_nc_sid=669407&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=ek2_lZqd_ZoQ7kNvwGhcA55&_nc_oc=Adop-eVW6RXRFEv1qCujMAw';
+const kishabySreeLogoUrl = '/kishabySree-logo.png';
 const heroImage = 'https://images.pexels.com/photos/36962415/pexels-photo-36962415.jpeg?auto=compress&cs=tinysrgb&w=1600';
 const products = [
   {
