@@ -140,7 +140,7 @@ function Page({ active, bagCount, children }) {
   return <div className="page"><Header active={active} bagCount={bagCount} />{children}<Footer /></div>;
 }
 
-function LittleSree() {
+function LittleSree({ isBagPage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -176,7 +176,7 @@ function LittleSree() {
     }
   }
 
-  return <div className="little-sree-widget">
+  return <div className={`little-sree-widget ${isBagPage ? 'on-bag-page' : ''}`}>
     {isOpen && <section className="little-sree-panel" id="little-sree-panel" role="dialog" aria-modal="false" aria-labelledby="little-sree-title">
       <header className="little-sree-header">
         <span className="little-sree-mark" aria-hidden="true">LS</span>
@@ -234,7 +234,7 @@ function App() {
     {parts[0] === 'product' && parts[2] && <Description product={product} bagCount={bagCount} />}
     {parts[0] === 'product' && !parts[2] && <ProductDetail product={product} bagCount={bagCount} onAdd={() => addToBag(product)} />}
     {!parts[0] && <Home bagCount={bagCount} />}
-    <LittleSree />
+    <LittleSree isBagPage={parts[0] === 'bag'} />
   </CatalogContext.Provider>;
 }
 

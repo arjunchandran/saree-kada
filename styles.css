@@ -240,6 +240,9 @@ img { display: block; width: 100%; object-fit: cover; }
   .little-sree-launcher-copy { padding: 10px 35px 10px 11px; width: 162px; }
   .little-sree-launcher-copy strong { font-size: 15px; }
   .little-sree-launcher-copy small { font-size: 9px; }
+  .little-sree-widget.on-bag-page .little-sree-launcher { background: var(--backwater); border-radius: 50%; height: 52px; overflow: hidden; width: 52px; }
+  .little-sree-widget.on-bag-page .little-sree-launcher-copy { display: none; }
+  .little-sree-widget.on-bag-page .kathakali-stage { height: 52px; right: 0; width: 52px; }
   .little-sree-panel { bottom: 76px; height: min(560px, calc(100dvh - 92px)); right: 14px; width: calc(100vw - 28px); }
   .site-header { height: 65px; padding: 0 5vw; }
   .utility-strip { gap: 12px; justify-content: center; min-height: 28px; padding: 0 5vw; }
@@ -279,6 +282,19 @@ img { display: block; width: 100%; object-fit: cover; }
   .site-footer { flex-direction: column; gap: 12px; padding: 23px 5vw 30px; }
   .page-intro { padding: 85px 5vw 55px; }
   .page-intro::after { right: 5vw; top: 105px; width: 25vw; }
+  .bag-page { padding-bottom: 170px; }
+  .bag-page .page-intro h1 { font-size: clamp(42px, 12vw, 60px); }
+  .empty-bag { margin: 0 5vw 30px; padding: 42px 18px; }
+  .bag-layout { grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 0 5vw 60px; }
+  .bag-item { align-items: start; gap: 12px; grid-template-columns: minmax(64px, 25%) minmax(0, 1fr); padding: 12px; }
+  .bag-item-image { grid-row: span 2; }
+  .bag-item-copy { flex-direction: column; gap: 14px; min-width: 0; }
+  .bag-item-copy h2 { font-size: 23px; overflow-wrap: anywhere; }
+  .bag-item-meta { align-items: center; flex-direction: row; justify-content: space-between; }
+  .bag-item > strong { grid-column: 2; justify-self: start; }
+  .bag-summary { padding: 20px 16px; position: static; }
+  .summary-row { align-items: flex-start; }
+  .summary-row span:last-child { text-align: right; }
   .journal-grid { display: block; padding: 0 5vw 75px; }
   .journal-card { margin-bottom: 20px; }
   .journal-card-copy h2 { font-size: 34px; }
@@ -299,6 +315,14 @@ img { display: block; width: 100%; object-fit: cover; }
   .about-grid { display: block; padding: 80px 5vw; }
   .about-grid h2 { margin-bottom: 45px; }
   .quote p { font-size: 25px; }
+}
+
+@media (max-width: 360px) {
+  .brand { font-size: 13px; letter-spacing: .1em; }
+  .brand-logo { height: 30px; width: 30px; }
+  .brand-sub { display: none; }
+  .header-actions { gap: 4px; }
+  .bag-button { gap: 5px; padding: 7px 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
