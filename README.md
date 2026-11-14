@@ -25,6 +25,10 @@ For production, run `npm run build` followed by `npm start`. The server serves t
 
 The repository includes a Netlify Function for `/api/chat`. In the Netlify site dashboard, add `GOOGLE_API_KEY` and the same `VITE_FIREBASE_*` web settings under **Project configuration → Environment variables**, make them available to Functions as well as the build, then trigger a new deploy. `GOOGLE_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. Never commit `.env` or place the Gemini API key in a `VITE_` variable.
 
+### Vercel
+
+The repository includes a Vercel Function for `/api/chat`. In the Vercel project settings, add `GOOGLE_API_KEY` as a secret and the same `VITE_FIREBASE_*` web settings under **Environment Variables** for the relevant deployment environments, then redeploy. The Firebase settings are used by both the build and the chat function. `GOOGLE_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. The service-account file and `GOOGLE_APPLICATION_CREDENTIALS` are not needed for the website.
+
 ### Notebook
 
 Open `Little_Sree_Chat_Agent.ipynb` from the repository root, run its cells from top to bottom, and provide `GOOGLE_API_KEY` in the local `.env` file. The first code cell installs the notebook dependencies; the final cell launches the Gradio chat.

@@ -16,7 +16,7 @@ export default async function chat(request) {
 
   const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return jsonResponse(503, { error: 'Little Sree is not configured yet. Add GOOGLE_API_KEY to the Netlify site environment.' });
+    return jsonResponse(503, { error: 'Little Sree is not configured yet. Add GOOGLE_API_KEY to the server environment.' });
   }
 
   try {

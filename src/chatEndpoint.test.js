@@ -1,8 +1,10 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
-import chat from '../netlify/functions/chat.mjs';
+import netlifyChat from '../netlify/functions/chat.mjs';
+import vercelChat from '../api/chat.js';
 
-test('does not call Gemini when configured Firebase catalog cannot be loaded', async t => {
+for (const [platform, chat] of [['Netlify', netlifyChat], ['Vercel', vercelChat.fetch]]) {
+test(`${platform}: does not call Gemini when configured Firebase catalog cannot be loaded`, async t => {
   const keys = ['GOOGLE_API_KEY', 'GEMINI_API_KEY', 'VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_APP_ID'];
   const previous = Object.fromEntries(keys.map(key => [key, process.env[key]]));
   t.after(() => {
@@ -31,7 +33,7 @@ test('does not call Gemini when configured Firebase catalog cannot be loaded', a
   assert.equal(errorLog.mock.callCount(), 1);
 });
 
-test('returns a formatted response with validated product IDs', async t => {
+test(`${platform}: returns a formatted response with validated product IDs`, async t => {
   const keys = ['GOOGLE_API_KEY', 'GEMINI_API_KEY', 'VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_AUTH_DOMAIN', 'VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_STORAGE_BUCKET', 'VITE_FIREBASE_MESSAGING_SENDER_ID', 'VITE_FIREBASE_APP_ID'];
   const previous = Object.fromEntries(keys.map(key => [key, process.env[key]]));
   t.after(() => {
@@ -55,3 +57,24 @@ test('returns a formatted response with validated product IDs', async t => {
   const request = JSON.parse(fetchMock.mock.calls[0].arguments[1].body);
   assert.equal(request.response_format.type, 'json_schema');
 });
+
+test(`${platform}: rejects invalid methods and malformed JSON`, async t => {
+  const previous = process.env.GOOGLE_API_KEY;
+  t.after(() => {
+    if (previous === undefined) delete process.env.GOOGLE_API_KEY;
+    else process.env.GOOGLE_API_KEY = previous;
+  });
+  process.env.GOOGLE_API_KEY = 'test-key';
+
+  const getResponse = await chat(new Request('http://localhost/api/chat'));
+  assert.equal(getResponse.status, 405);
+
+  const badResponse = await chat(new Request('http://localhost/api/chat', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: '{'
+  }));
+  assert.equal(badResponse.status, 400);
+  assert.match((await badResponse.json()).error, /not valid JSON/);
+});
+}
