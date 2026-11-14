@@ -10,6 +10,10 @@ test('uses the preview catalog only when no Firebase web config is supplied', as
   await assert.rejects(loadChatCatalog({ VITE_FIREBASE_API_KEY: 'your-web-api-key', VITE_FIREBASE_PROJECT_ID: 'my-project', VITE_FIREBASE_APP_ID: 'app' }), /placeholders/);
 });
 
+test('prompt includes the KishabySree Instagram handle', () => {
+  assert.match(buildLittleSreePrompt([]), /@kishabysree\b/);
+});
+
 test('prompt uses current catalog categories and labels demo products', () => {
   const prompt = buildLittleSreePrompt([{
     id: 'new-shirt',

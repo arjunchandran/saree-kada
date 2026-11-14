@@ -1,5 +1,9 @@
 # KishabySree
 
+## Shopping bag
+
+The bag groups items by product and selected length, where available. Use the quantity controls to add or remove individual pieces; decreasing the quantity to zero removes that entry. The bag is cleared when the page is refreshed or closed.
+
 ## Little Sree
 
 Little Sree is a site-scoped AI guide for KishabySree. It answers from the on-site catalog and published shopping details; it is not a general-purpose chatbot.
