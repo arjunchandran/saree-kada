@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { createServer as createViteServer } from 'vite';
 import { buildLittleSreePrompt } from './src/chatContext.js';
 import { loadChatCatalog } from './src/chatCatalog.js';
+import { chatResponseFormat, parseChatResponse } from './src/chatResponse.js';
 
 const port = Number(process.env.PORT || 3000);
 const isProduction = process.env.NODE_ENV === 'production' || process.argv.includes('--production');
@@ -65,6 +66,7 @@ async function handleChat(request, response) {
       body: JSON.stringify({
         model: process.env.GOOGLE_MODEL || 'gemini-3.5-flash-lite',
         messages: [{ role: 'system', content: buildLittleSreePrompt(catalog) }, ...messages],
+        response_format: chatResponseFormat,
         temperature: 0.4,
         max_tokens: 500
       }),
@@ -78,7 +80,15 @@ async function handleChat(request, response) {
       return;
     }
 
-    sendJson(response, 200, { reply: result.choices?.[0]?.message?.content || 'I do not have an answer for that from the KishabySree site.' });
+    let reply;
+    try {
+      reply = parseChatResponse(result.choices?.[0]?.message?.content, catalog);
+    } catch (error) {
+      console.error('Little Sree returned an invalid response:', error);
+      sendJson(response, 502, { error: 'Little Sree could not prepare a response. Please try again.' });
+      return;
+    }
+    sendJson(response, 200, reply);
   } catch (error) {
     const status = error instanceof SyntaxError ? 400 : 500;
     if (status === 500) console.error('Little Sree request failed:', error);

@@ -10,6 +10,10 @@ Little Sree is a site-scoped AI guide for KishabySree. It answers from the on-si
 
 For each chat request, the server reads the current Firestore `products` collection using the same public Firebase web configuration and read rules as the storefront, then sends product details to Gemini as context. This incurs Firestore reads. If Firebase is not configured at all, Little Sree uses the local preview catalog; if the configured catalog cannot be read, it reports an error instead of using stale data. Demo products are identified as not for sale.
 
+Little Sree shows product cards for catalog items discussed in its replies. Visitors can choose a saree length where applicable, add items to the bag, and open the bag from the chat. Checkout is not yet available.
+
+The site footer and Little Sree's chat include an email link to `kishabysree@gmail.com`. It opens the visitor's email app; the site does not send the message itself.
+
 ### Website
 
 1. Copy `.env.example` to `.env`, set `GOOGLE_API_KEY` to a Gemini API key, and configure the `VITE_FIREBASE_*` web settings as described in `FIREBASE_SETUP.md`. The Gemini key is read by the server and is never sent to the browser. The chat does not need the service-account key.

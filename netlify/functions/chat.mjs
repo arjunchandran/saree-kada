@@ -1,5 +1,6 @@
 import { buildLittleSreePrompt } from '../../src/chatContext.js';
 import { loadChatCatalog } from '../../src/chatCatalog.js';
+import { chatResponseFormat, parseChatResponse } from '../../src/chatResponse.js';
 
 function jsonResponse(statusCode, body) {
   return new Response(JSON.stringify(body), {
@@ -47,6 +48,7 @@ export default async function chat(request) {
       body: JSON.stringify({
         model: process.env.GOOGLE_MODEL || 'gemini-3.5-flash-lite',
         messages: [{ role: 'system', content: buildLittleSreePrompt(catalog) }, ...messages],
+        response_format: chatResponseFormat,
         temperature: 0.4,
         max_tokens: 500
       }),
@@ -60,7 +62,12 @@ export default async function chat(request) {
       return jsonResponse(502, { error: 'Little Sree could not reply just now. Please try again in a moment.' });
     }
 
-    return jsonResponse(200, { reply: result.choices?.[0]?.message?.content || 'I do not have an answer for that from the KishabySree site.' });
+    try {
+      return jsonResponse(200, parseChatResponse(result.choices?.[0]?.message?.content, catalog));
+    } catch (error) {
+      console.error('Little Sree returned an invalid response:', error);
+      return jsonResponse(502, { error: 'Little Sree could not prepare a response. Please try again.' });
+    }
   } catch (error) {
     const statusCode = error instanceof SyntaxError ? 400 : 500;
     if (statusCode === 500) console.error('Little Sree request failed:', error);

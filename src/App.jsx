@@ -1,7 +1,9 @@
 import { createContext, lazy, Suspense, useContext, useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { fetchProducts, localProducts } from './products';
 import { filterProducts, getCategories } from './catalogFilters';
 import { addBagItem, changeBagQuantity, removeBagItem } from './bag';
+import { contactEmail } from './contact';
 
 const KathakaliMiniature = lazy(() => import('./KathakaliMiniature'));
 
@@ -9,6 +11,7 @@ const instagramUrl = 'https://www.instagram.com/kishabysree/';
 const kishabySreeLogoUrl = '/kishabySree-logo.png';
 const heroImage = 'https://images.pexels.com/photos/36962415/pexels-photo-36962415.jpeg?auto=compress&cs=tinysrgb&w=1600';
 const CatalogContext = createContext(localProducts);
+const sareeLengths = ['Free', '5.5m', '6m'];
 
 function ArrowIcon({ direction = 'up-right' }) {
   const paths = {
@@ -44,7 +47,7 @@ function Header({ active, bagCount }) {
 }
 
 function Footer() {
-  return <footer className="site-footer"><span>© 2024 KishabySree</span><a href={instagramUrl} target="_blank" rel="noreferrer">Follow @kishabysree <ArrowIcon /></a></footer>;
+  return <footer className="site-footer"><span>© 2024 KishabySree</span><a href={`mailto:${contactEmail}`}>Email us · {contactEmail}</a><a href={instagramUrl} target="_blank" rel="noreferrer">Follow @kishabysree <ArrowIcon /></a></footer>;
 }
 
 function ProductCard({ product }) {
@@ -78,13 +81,23 @@ function Home({ bagCount }) {
     })}</section>}
     <section className="section home-arrivals"><div className="section-head"><h2>New arrivals</h2><a className="text-link" href="#/shop">View all pieces <ArrowIcon /></a></div><div className="product-grid">{products.map(product => <ProductCard key={product.id} product={product} />)}</div></section>
     <section className="statement-band"><span className="eyebrow">Our philosophy · നമ്മുടെ വഴി</span><h2>Less noise.<br />More <em>presence.</em></h2><p className="band-copy">A wardrobe that supports the life you are already living. Natural cloth, considered colour, and the ease of a familiar ritual.</p><div className="band-footer"><span>01 — 03</span><span>Kathakali / കഥകളി <ArrowIcon direction="down-right" /></span></div></section>
-    <section className="newsletter"><h2>Stay in<br />the loop.</h2><div><p>Notes on clothing, culture, and the spaces between. Once a month, no noise.</p><Signup /><a className="social-link" href={instagramUrl} target="_blank" rel="noreferrer">See the studio on Instagram · @kishabysree <ArrowIcon /></a></div></section>
+    <section className="instagram-feature">
+      <div className="instagram-feature-copy">
+        <span className="eyebrow">Find us on Instagram</span>
+        <h2>A little more<br /><em>KishabySree.</em></h2>
+        <p>Follow along for more from our world of clothing and culture.</p>
+        <a className="instagram-feature-link" href={instagramUrl} target="_blank" rel="noreferrer">Follow @kishabysree <ArrowIcon /></a>
+      </div>
+      <div className="instagram-feature-card">
+        <a className="instagram-profile" href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Visit KishabySree on Instagram">
+          <img src={kishabySreeLogoUrl} alt="" />
+          <div><span>Instagram</span><strong>@kishabysree</strong></div>
+          <svg className="instagram-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".9" fill="currentColor" stroke="none" /></svg>
+        </a>
+        <p className="instagram-card-caption">A little tradition. A little today.</p>
+      </div>
+    </section>
   </main></Page>;
-}
-
-function Signup() {
-  const [submitted, setSubmitted] = useState(false);
-  return submitted ? <p className="signup-success">Welcome to the list.</p> : <form className="signup" onSubmit={event => { event.preventDefault(); setSubmitted(true); }}><input type="email" placeholder="Your email address" aria-label="Your email address" required /><button>Join <ArrowIcon /></button></form>;
 }
 
 function Shop({ bagCount, initialGarment }) {
@@ -118,7 +131,7 @@ function ProductDetail({ product, bagCount, onAdd }) {
       <div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description <ArrowIcon /></a></div>
     </aside></div></main></Page>;
   }
-  return <Page active="shop" bagCount={bagCount}><main><div className="detail-layout"><div className="detail-gallery">{product.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${product.name}, view ${index + 1}`} />)}</div><aside className="detail-info"><span className="eyebrow">KishabySree / 0{products.indexOf(product) + 1}</span><h1>{product.name}</h1><span className="detail-price">{product.price}</span><p className="detail-copy">{product.demo ? product.description : 'A five-metre handwoven saree with an easy drape, a clean blouse piece, and a border that carries the quiet ceremony of Kerala dressing.'}</p>{!product.demo && <div className="detail-rule"><div className="option-label"><span>Length</span><span>{size}</span></div><div className="sizes">{['Free', '5.5m', '6m'].map(option => <button type="button" className={`size ${size === option ? 'selected' : ''}`} aria-pressed={size === option} key={option} onClick={() => setSize(option)}>{option}</button>)}</div></div>}<button className="add-button" onClick={() => onAdd(product.demo ? undefined : size)}>Add to bag — {product.price}</button>{!product.demo && <div className="detail-note"><span>Free delivery over ₹5,000</span><span>Blouse piece included</span></div>}<div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description <ArrowIcon /></a></div></aside></div></main></Page>;
+  return <Page active="shop" bagCount={bagCount}><main><div className="detail-layout"><div className="detail-gallery">{product.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${product.name}, view ${index + 1}`} />)}</div><aside className="detail-info"><span className="eyebrow">KishabySree / 0{products.indexOf(product) + 1}</span><h1>{product.name}</h1><span className="detail-price">{product.price}</span><p className="detail-copy">{product.demo ? product.description : 'A five-metre handwoven saree with an easy drape, a clean blouse piece, and a border that carries the quiet ceremony of Kerala dressing.'}</p>{!product.demo && <div className="detail-rule"><div className="option-label"><span>Length</span><span>{size}</span></div><div className="sizes">{sareeLengths.map(option => <button type="button" className={`size ${size === option ? 'selected' : ''}`} aria-pressed={size === option} key={option} onClick={() => setSize(option)}>{option}</button>)}</div></div>}<button className="add-button" onClick={() => onAdd(product.demo ? undefined : size)}>Add to bag — {product.price}</button>{!product.demo && <div className="detail-note"><span>Free delivery over ₹5,000</span><span>Blouse piece included</span></div>}<div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description <ArrowIcon /></a></div></aside></div></main></Page>;
 }
 
 function Description({ product, bagCount }) {
@@ -159,7 +172,28 @@ function Page({ active, bagCount, children }) {
   return <div className="page"><Header active={active} bagCount={bagCount} />{children}<Footer /></div>;
 }
 
-function LittleSree({ isBagPage, isHomePage }) {
+function ChatProductCard({ product, onAdd, onNavigate }) {
+  const [size, setSize] = useState('Free');
+  const [added, setAdded] = useState(false);
+  const hasLength = !product.demo && (!product['collective-category'] || product['collective-category'] === 'Saree');
+
+  return <article className="chat-product">
+    <a className="chat-product-details" href={`#/product/${product.id}`} onClick={onNavigate}>
+      <img src={product.images[0]} alt="" loading="lazy" />
+      <span><strong>{product.name}</strong><span>{product.color}</span><b>{product.price}</b></span>
+    </a>
+    {hasLength && <label className="chat-product-length">Length
+      <select value={size} onChange={event => setSize(event.target.value)} aria-label={`Length for ${product.name}`}>
+        {sareeLengths.map(option => <option key={option} value={option}>{option}</option>)}
+      </select>
+    </label>}
+    <button className="chat-add-button" type="button" onClick={() => { onAdd(product, hasLength ? size : undefined); setAdded(true); }}>Add to bag</button>
+    {added && <span className="chat-product-added" role="status">Added to your bag</span>}
+  </article>;
+}
+
+function LittleSree({ bagCount, onAdd }) {
+  const catalog = useContext(CatalogContext);
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -187,7 +221,10 @@ function LittleSree({ isBagPage, isHomePage }) {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Little Sree could not reply. Please try again.');
-      setMessages([...nextMessages, { role: 'assistant', content: result.reply }]);
+      if (typeof result.reply !== 'string' || !Array.isArray(result.productIds)) {
+        throw new Error('Little Sree returned an invalid response. Please try again.');
+      }
+      setMessages([...nextMessages, { role: 'assistant', content: result.reply, productIds: result.productIds }]);
     } catch (error) {
       setMessages([...nextMessages, { role: 'assistant', content: error.message || 'Little Sree could not reply. Please try again.' }]);
     } finally {
@@ -195,7 +232,7 @@ function LittleSree({ isBagPage, isHomePage }) {
     }
   }
 
-  return <div className={`little-sree-widget ${isBagPage ? 'on-bag-page' : ''} ${isHomePage ? 'on-home-page' : ''}`}>
+  return <div className="little-sree-widget">
     {isOpen && <section className="little-sree-panel" id="little-sree-panel" role="dialog" aria-modal="false" aria-labelledby="little-sree-title">
       <header className="little-sree-header">
         <span className="little-sree-mark" aria-hidden="true">LS</span>
@@ -203,14 +240,22 @@ function LittleSree({ isBagPage, isHomePage }) {
         <button className="little-sree-close" type="button" aria-label="Close Little Sree chat" onClick={() => setIsOpen(false)}>×</button>
       </header>
       <div className="little-sree-messages" ref={messagesRef} role="log" aria-live="polite" aria-relevant="additions text">
-        {messages.map((message, index) => <p className={`little-sree-message ${message.role}`} key={`${index}-${message.role}`}>{message.content}</p>)}
+        {messages.map((message, index) => message.role === 'user'
+          ? <p className="little-sree-message user" key={index}>{message.content}</p>
+          : <div className="little-sree-response" key={index}>
+            <div className="little-sree-message assistant"><ReactMarkdown allowedElements={['p', 'strong', 'em', 'ul', 'ol', 'li', 'br', 'h1', 'h2', 'h3']} unwrapDisallowed>{message.content}</ReactMarkdown></div>
+            {message.productIds?.map(id => {
+              const product = catalog.find(item => item.id === id);
+              return product ? <ChatProductCard key={id} product={product} onAdd={onAdd} onNavigate={() => setIsOpen(false)} /> : <p className="chat-product-unavailable" key={id}>A suggested product is not in the current catalog. Refresh to see the latest collection.</p>;
+            })}
+          </div>)}
         {isSending && <p className="little-sree-message assistant typing" aria-label="Little Sree is typing">Little Sree is thinking...</p>}
       </div>
       <form className="little-sree-form" onSubmit={sendMessage}>
         <input value={input} onChange={event => setInput(event.target.value)} placeholder="Ask about KishabySree..." aria-label="Message Little Sree" maxLength={1000} disabled={isSending} />
         <button type="submit" aria-label="Send message" disabled={!input.trim() || isSending}>Send</button>
       </form>
-      <span className="little-sree-note">AI guide · KishabySree topics only</span>
+      <div className="little-sree-footer"><span className="little-sree-note">AI guide · KishabySree topics only</span><a className="chat-contact-link" href={`mailto:${contactEmail}`} aria-label={`Email ${contactEmail}`}>Email us</a>{bagCount > 0 && <a className="chat-bag-link" href="#/bag" onClick={() => setIsOpen(false)}>View bag ({bagCount}) <ArrowIcon /></a>}</div>
     </section>}
     {!isOpen && <button className="little-sree-launcher" type="button" aria-label="Open Little Sree chat" aria-expanded={false} aria-controls="little-sree-panel" onClick={() => setIsOpen(true)}>
       <Suspense fallback={<span className="kathakali-loading" aria-hidden="true" />}>
@@ -218,7 +263,7 @@ function LittleSree({ isBagPage, isHomePage }) {
       </Suspense>
       <span className="little-sree-launcher-copy">
         <strong>Little Sree</strong>
-        <small>Ask about saree stories</small>
+        <small>Ask about our collection</small>
       </span>
     </button>}
   </div>;
@@ -263,7 +308,7 @@ function App() {
     {parts[0] === 'product' && parts[2] && <Description product={product} bagCount={bagCount} />}
     {parts[0] === 'product' && !parts[2] && <ProductDetail key={product.id} product={product} bagCount={bagCount} onAdd={size => addToBag(product, size)} />}
     {!parts[0] && <Home bagCount={bagCount} />}
-    <LittleSree isBagPage={parts[0] === 'bag'} isHomePage={!parts[0]} />
+    <LittleSree bagCount={bagCount} onAdd={addToBag} />
   </CatalogContext.Provider>;
 }
 
