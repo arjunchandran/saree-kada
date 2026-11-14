@@ -3,13 +3,10 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { createServer as createViteServer } from 'vite';
 import { buildLittleSreePrompt } from './src/chatContext.js';
+import { loadChatCatalog } from './src/chatCatalog.js';
 
 const port = Number(process.env.PORT || 3000);
 const isProduction = process.env.NODE_ENV === 'production' || process.argv.includes('--production');
-const catalog = JSON.parse(await readFile(resolve('public/products.json'), 'utf8'));
-
-const systemPrompt = buildLittleSreePrompt(catalog);
-
 function sendJson(response, status, data) {
   response.writeHead(status, { 'content-type': 'application/json; charset=utf-8' });
   response.end(JSON.stringify(data));
@@ -53,12 +50,21 @@ async function handleChat(request, response) {
       return;
     }
 
+    let catalog;
+    try {
+      catalog = await loadChatCatalog();
+    } catch (error) {
+      console.error('Little Sree could not load the product catalog:', error);
+      sendJson(response, 503, { error: 'Little Sree cannot access the live product catalog right now. Please try again.' });
+      return;
+    }
+
     const upstream = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
       method: 'POST',
       headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
       body: JSON.stringify({
         model: process.env.GOOGLE_MODEL || 'gemini-3.5-flash-lite',
-        messages: [{ role: 'system', content: systemPrompt }, ...messages],
+        messages: [{ role: 'system', content: buildLittleSreePrompt(catalog) }, ...messages],
         temperature: 0.4,
         max_tokens: 500
       }),
@@ -75,6 +81,7 @@ async function handleChat(request, response) {
     sendJson(response, 200, { reply: result.choices?.[0]?.message?.content || 'I do not have an answer for that from the KishabySree site.' });
   } catch (error) {
     const status = error instanceof SyntaxError ? 400 : 500;
+    if (status === 500) console.error('Little Sree request failed:', error);
     sendJson(response, status, { error: status === 400 ? 'The chat request was not valid JSON.' : 'Little Sree could not reply just now. Please try again.' });
   }
 }

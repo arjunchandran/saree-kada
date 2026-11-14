@@ -7,13 +7,19 @@
     "dev": "node --env-file-if-exists=.env server.js",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node --env-file-if-exists=.env server.js --production"
+    "start": "node --env-file-if-exists=.env server.js --production",
+    "seed:products": "node --env-file-if-exists=.env scripts/seed-products.js"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
+    "firebase": "latest",
+    "firebase-admin": "latest",
     "react": "latest",
     "react-dom": "latest",
     "three": "^0.186.1",
     "vite": "latest"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.13.6"
   }
 }

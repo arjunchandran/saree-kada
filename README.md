@@ -4,16 +4,18 @@
 
 Little Sree is a site-scoped AI guide for KishabySree. It answers from the on-site catalog and published shopping details; it is not a general-purpose chatbot.
 
+For each chat request, the server reads the current Firestore `products` collection using the same public Firebase web configuration and read rules as the storefront, then sends product details to Gemini as context. This incurs Firestore reads. If Firebase is not configured at all, Little Sree uses the local preview catalog; if the configured catalog cannot be read, it reports an error instead of using stale data. Demo products are identified as not for sale.
+
 ### Website
 
-1. Copy `.env.example` to `.env` and set `GOOGLE_API_KEY` to a Gemini API key. The key is read by the server and is never sent to the browser.
+1. Copy `.env.example` to `.env`, set `GOOGLE_API_KEY` to a Gemini API key, and configure the `VITE_FIREBASE_*` web settings as described in `FIREBASE_SETUP.md`. The Gemini key is read by the server and is never sent to the browser. The chat does not need the service-account key.
 2. Run `npm run dev` and open [http://localhost:3000](http://localhost:3000).
 
 For production, run `npm run build` followed by `npm start`. The server serves the built site and the `/api/chat` endpoint from the same origin. Set `GOOGLE_API_KEY` in the hosting provider's server environment; do not put it in a `VITE_` variable.
 
 ### Netlify
 
-The repository includes a Netlify Function for `/api/chat`. In the Netlify site dashboard, add `GOOGLE_API_KEY` under **Project configuration → Environment variables**, make it available to Functions, then trigger a new deploy. `GOOGLE_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. Never commit `.env` or place the API key in a `VITE_` variable.
+The repository includes a Netlify Function for `/api/chat`. In the Netlify site dashboard, add `GOOGLE_API_KEY` and the same `VITE_FIREBASE_*` web settings under **Project configuration → Environment variables**, make them available to Functions as well as the build, then trigger a new deploy. `GOOGLE_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. Never commit `.env` or place the Gemini API key in a `VITE_` variable.
 
 ### Notebook
 

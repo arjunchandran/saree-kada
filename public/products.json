@@ -6,6 +6,8 @@
     "color": "Ivory / zari cotton",
     "composition": "Handloom cotton with zari border",
     "origin": "Balaramapuram, Kerala",
+    "collective-category": "Saree",
+    "product-category": "Traditional",
     "images": [
       "https://images.pexels.com/photos/36962415/pexels-photo-36962415.jpeg?auto=compress&cs=tinysrgb&w=1400",
       "https://images.pexels.com/photos/28752502/pexels-photo-28752502.jpeg?auto=compress&cs=tinysrgb&w=900",
@@ -19,6 +21,8 @@
     "color": "Mull white / cotton",
     "composition": "Handwoven Kerala cotton",
     "origin": "Kuthampully, Kerala",
+    "collective-category": "Saree",
+    "product-category": "Traditional",
     "images": [
       "https://images.pexels.com/photos/29251866/pexels-photo-29251866.jpeg?auto=compress&cs=tinysrgb&w=1400",
       "https://images.pexels.com/photos/39322116/pexels-photo-39322116.jpeg?auto=compress&cs=tinysrgb&w=900"
@@ -31,9 +35,71 @@
     "color": "Vermilion / silk cotton",
     "composition": "Silk cotton with hand-finished border",
     "origin": "Kannur, Kerala",
+    "collective-category": "Saree",
+    "product-category": "Traditional",
     "images": [
       "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1400&q=88",
       "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=88"
+    ]
+  },
+  {
+    "id": "demo-blue-kurti",
+    "name": "Blue Kurti",
+    "price": "₹2,400",
+    "color": "Blue",
+    "composition": "Illustrative sample",
+    "origin": "Demo product",
+    "collective-category": "Kurta/Kurti",
+    "product-category": "Casual Wear",
+    "description": "A tunic-inspired look for everyday wear. This is an illustrative demo, not an actual product listing.",
+    "demo": true,
+    "images": [
+      "https://images.pexels.com/photos/19556879/pexels-photo-19556879.jpeg?auto=compress&cs=tinysrgb&w=900"
+    ]
+  },
+  {
+    "id": "demo-white-shirt",
+    "name": "White Shirt",
+    "price": "₹1,800",
+    "color": "White",
+    "composition": "Illustrative sample",
+    "origin": "Demo product",
+    "collective-category": "Shirt",
+    "product-category": "Office Wear",
+    "description": "A classic shirt-inspired look for a considered work wardrobe. This is an illustrative demo, not an actual product listing.",
+    "demo": true,
+    "images": [
+      "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=900"
+    ]
+  },
+  {
+    "id": "demo-orange-skirt",
+    "name": "Orange Skirt",
+    "price": "₹2,900",
+    "color": "Orange",
+    "composition": "Illustrative sample",
+    "origin": "Demo product",
+    "collective-category": "Skirt",
+    "product-category": "Party Wear",
+    "description": "A skirt-inspired occasion look with a bright accent. This is an illustrative demo, not an actual product listing.",
+    "demo": true,
+    "images": [
+      "https://images.pexels.com/photos/27954765/pexels-photo-27954765.jpeg?auto=compress&cs=tinysrgb&w=900"
+    ]
+  },
+  {
+    "id": "demo-blue-churidar",
+    "name": "Blue Churidar Look",
+    "price": "₹3,600",
+    "color": "Blue",
+    "composition": "Illustrative sample",
+    "origin": "Demo product",
+    "collective-category": "Churidar",
+    "product-category": "Traditional",
+    "description": "An illustrative traditional outfit inspired by the pairing of a tunic and fitted trousers. This is a demo, not an actual product listing.",
+    "demo": true,
+    "images": [
+      "https://images.pexels.com/photos/25184992/pexels-photo-25184992.jpeg?auto=compress&cs=tinysrgb&w=900"
     ]
   }
 ]

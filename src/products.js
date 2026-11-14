@@ -1,50 +1,19 @@
-export const localProducts = [
-  {
-    id: 'kasavu-saree',
-    name: 'Kasavu Saree',
-    price: '₹18,500',
-    color: 'Ivory / zari cotton',
-    composition: 'Handloom cotton with zari border',
-    origin: 'Balaramapuram, Kerala',
-    images: [
-      'https://images.pexels.com/photos/36962415/pexels-photo-36962415.jpeg?auto=compress&cs=tinysrgb&w=1400',
-      'https://images.pexels.com/photos/28752502/pexels-photo-28752502.jpeg?auto=compress&cs=tinysrgb&w=900',
-      'https://images.pexels.com/photos/36949450/pexels-photo-36949450.jpeg?auto=compress&cs=tinysrgb&w=900'
-    ]
-  },
-  {
-    id: 'white-set-saree',
-    name: 'Handwoven White Set Saree',
-    price: '₹16,500',
-    color: 'Mull white / cotton',
-    composition: 'Handwoven Kerala cotton',
-    origin: 'Kuthampully, Kerala',
-    images: [
-      'https://images.pexels.com/photos/29251866/pexels-photo-29251866.jpeg?auto=compress&cs=tinysrgb&w=1400',
-      'https://images.pexels.com/photos/39322116/pexels-photo-39322116.jpeg?auto=compress&cs=tinysrgb&w=900'
-    ]
-  },
-  {
-    id: 'theyyam-silk-saree',
-    name: 'Theyyam Silk Saree',
-    price: '₹27,000',
-    color: 'Vermilion / silk cotton',
-    composition: 'Silk cotton with hand-finished border',
-    origin: 'Kannur, Kerala',
-    images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1400&q=88',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=88'
-    ]
-  }
-];
+import localCatalog from '../public/products.json';
+import { normalizeProduct } from './catalog.js';
+
+export const localProducts = localCatalog;
 
 export async function fetchProducts() {
-  try {
-    const response = await fetch('/products.json');
-    if (!response.ok) throw new Error(`Catalog request failed: ${response.status}`);
-    const catalog = await response.json();
-    return Array.isArray(catalog) && catalog.length ? catalog : localProducts;
-  } catch {
-    return localProducts;
+  const { firebaseConfigured, firestore } = await import('./firebase.js');
+  if (!firebaseConfigured) return localProducts;
+
+  const { collection, getDocs } = await import('firebase/firestore');
+  const snapshot = await getDocs(collection(firestore, 'products'));
+  if (snapshot.empty) {
+    throw new Error('The Firestore "products" collection is empty. Run npm run seed:products to add the catalog.');
   }
+
+  return snapshot.docs
+    .map(productDoc => normalizeProduct(productDoc.id, productDoc.data()))
+    .sort((left, right) => (left.sortOrder ?? Number.MAX_SAFE_INTEGER) - (right.sortOrder ?? Number.MAX_SAFE_INTEGER));
 }

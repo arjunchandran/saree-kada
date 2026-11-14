@@ -1,52 +1,13 @@
 import { createContext, lazy, Suspense, useContext, useEffect, useRef, useState } from 'react';
-import { fetchProducts } from './products';
+import { fetchProducts, localProducts } from './products';
+import { filterProducts, getCategories } from './catalogFilters';
 
 const KathakaliMiniature = lazy(() => import('./KathakaliMiniature'));
 
 const instagramUrl = 'https://www.instagram.com/kishabysree/';
 const kishabySreeLogoUrl = '/kishabySree-logo.png';
 const heroImage = 'https://images.pexels.com/photos/36962415/pexels-photo-36962415.jpeg?auto=compress&cs=tinysrgb&w=1600';
-const products = [
-  {
-    id: 'kasavu-saree',
-    name: 'Kasavu Saree',
-    price: '₹18,500',
-    color: 'Ivory / zari cotton',
-    composition: 'Handloom cotton with zari border',
-    origin: 'Balaramapuram, Kerala',
-    images: [
-      'https://images.pexels.com/photos/36962415/pexels-photo-36962415.jpeg?auto=compress&cs=tinysrgb&w=1400',
-      'https://images.pexels.com/photos/28752502/pexels-photo-28752502.jpeg?auto=compress&cs=tinysrgb&w=900',
-      'https://images.pexels.com/photos/36949450/pexels-photo-36949450.jpeg?auto=compress&cs=tinysrgb&w=900'
-    ]
-  },
-  {
-    id: 'white-set-saree',
-    name: 'Handwoven White Set Saree',
-    price: '₹16,500',
-    color: 'Mull white / cotton',
-    composition: 'Handwoven Kerala cotton',
-    origin: 'Kuthampully, Kerala',
-    images: [
-      'https://images.pexels.com/photos/29251866/pexels-photo-29251866.jpeg?auto=compress&cs=tinysrgb&w=1400',
-      'https://images.pexels.com/photos/39322116/pexels-photo-39322116.jpeg?auto=compress&cs=tinysrgb&w=900'
-    ]
-  },
-  {
-    id: 'theyyam-silk-saree',
-    name: 'Theyyam Silk Saree',
-    price: '₹27,000',
-    color: 'Vermilion / silk cotton',
-    composition: 'Silk cotton with hand-finished border',
-    origin: 'Kannur, Kerala',
-    images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1400&q=88',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=88'
-    ]
-  }
-];
-
-const CatalogContext = createContext(products);
+const CatalogContext = createContext(localProducts);
 
 function Header({ active, bagCount }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -85,10 +46,26 @@ function ProductCard({ product }) {
 
 function Home({ bagCount }) {
   const products = useContext(CatalogContext);
+  const garments = getCategories(products, 'collective-category');
   return <Page active="home" bagCount={bagCount}><main>
-    <section className="hero"><div className="hero-copy"><div className="intro"><span className="eyebrow">Collection 04 / 2024</span><span className="kerala-kicker">From Kochi, with care</span><p>Clothes with a point of view. Designed for movement, made to last.</p></div><h1 className="display">The quiet<br />power of <em>form.</em></h1><div className="hero-actions"><a className="primary-cta" href="#/shop">Shop the collection <span>↗</span></a><a className="secondary-cta" href="#/about">Our craft story</a></div></div><div className="hero-image"><img className="hero-main-image" src={heroImage} alt="Woman wearing a handwoven saree" /><img className="hero-detail-image" src={products[1].images[0]} alt="Detail of a white handwoven Kerala saree" /><div className="hero-overlay"><span className="eyebrow">01 — The Kerala edit</span><strong>Soft ritual,<br />sharp presence.</strong></div><a className="hero-product" href={`#/product/${products[0].id}`}><span className="eyebrow">Featured saree</span><span className="hero-product-name">{products[0].name}</span><span className="hero-product-link">Discover piece ↗</span></a><span className="image-tag">Theyyam<br />in the<br />details</span></div></section>
-    <section className="category-rail"><span className="eyebrow">Find your drape</span><a href="#/shop">Kasavu <span>Ivory + gold</span> ↗</a><a href="#/shop">Set sarees <span>Everyday white</span> ↗</a><a href="#/shop">Silk stories <span>Festival colour</span> ↗</a></section>
-    <section className="section"><div className="section-head"><h2>New arrivals</h2><a className="text-link" href="#/shop">View all pieces ↗</a></div><div className="product-grid">{products.map(product => <ProductCard key={product.id} product={product} />)}</div></section>
+    <section className="hero">
+      <div className="hero-media" aria-hidden="true"><img src={heroImage} alt="" /></div>
+      <div className="hero-content">
+        <div className="hero-topline"><span>KishabySree / The collection</span><span>Kochi, Kerala</span></div>
+        <div className="hero-copy">
+          <p className="hero-kicker"><span aria-hidden="true" /> A little tradition. A little today.</p>
+          <h1>Clothes<br /><em>that feel</em><br />like you.</h1>
+          <p className="hero-description">Thoughtful pieces for every version of you. Inspired by our roots, made for your everyday.</p>
+          <div className="hero-actions"><a className="primary-cta" href="#/shop">Explore the collection <span aria-hidden="true">↗</span></a><a className="secondary-cta" href="#/about">Discover our story <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <div className="hero-bottomline"><span>Crafted with a point of view</span><span>Scroll to discover <span aria-hidden="true">↓</span></span></div>
+      </div>
+    </section>
+    {garments.length > 0 && <section className="category-rail"><span className="eyebrow">Shop by garment</span>{garments.map(category => {
+      const count = filterProducts(products, category, '').length;
+      return <a key={category} href={`#/shop?garment=${encodeURIComponent(category)}`}>{category}<span>{count} {count === 1 ? 'piece' : 'pieces'}</span> ↗</a>;
+    })}</section>}
+    <section className="section home-arrivals"><div className="section-head"><h2>New arrivals</h2><a className="text-link" href="#/shop">View all pieces ↗</a></div><div className="product-grid">{products.map(product => <ProductCard key={product.id} product={product} />)}</div></section>
     <section className="statement-band"><span className="eyebrow">Our philosophy · നമ്മുടെ വഴി</span><h2>Less noise.<br />More <em>presence.</em></h2><p className="band-copy">A wardrobe that supports the life you are already living. Natural cloth, considered colour, and the ease of a familiar ritual.</p><div className="band-footer"><span>01 — 03</span><span>Kathakali / കഥകളി ↘</span></div></section>
     <section className="newsletter"><h2>Stay in<br />the loop.</h2><div><p>Notes on clothing, culture, and the spaces between. Once a month, no noise.</p><Signup /><a className="social-link" href={instagramUrl} target="_blank" rel="noreferrer">See the studio on Instagram · @auraform.studio ↗</a></div></section>
   </main></Page>;
@@ -99,22 +76,49 @@ function Signup() {
   return submitted ? <p className="signup-success">Welcome to the list.</p> : <form className="signup" onSubmit={event => { event.preventDefault(); setSubmitted(true); }}><input type="email" placeholder="Your email address" aria-label="Your email address" required /><button>Join ↗</button></form>;
 }
 
-function Shop({ bagCount }) {
+function Shop({ bagCount, initialGarment }) {
   const products = useContext(CatalogContext);
-  return <Page active="shop" bagCount={bagCount}><main><section className="page-intro"><span className="eyebrow">The saree collection · കേരളം</span><h1>Everyday<br /><em>ceremony.</em></h1></section><section className="section shop-section"><div className="section-head"><span className="eyebrow">03 sarees / handwoven in Kerala</span><span className="eyebrow">Filter + sort ↘</span></div><div className="product-grid">{products.map(product => <ProductCard key={product.id} product={product} />)}</div></section></main></Page>;
+  const [collectiveCategory, setCollectiveCategory] = useState(initialGarment);
+  const [productCategory, setProductCategory] = useState('');
+  useEffect(() => { setCollectiveCategory(initialGarment); }, [initialGarment]);
+  const garments = getCategories(products, 'collective-category');
+  const occasions = getCategories(products, 'product-category');
+  const visibleProducts = filterProducts(products, collectiveCategory, productCategory);
+  return <Page active="shop" bagCount={bagCount}><main><section className="page-intro"><span className="eyebrow">The collection · കേരളം</span><h1>Everyday<br /><em>ceremony.</em></h1></section><section className="section shop-section">
+    <div className="shop-filters">
+      <label>Garment<select value={collectiveCategory} onChange={event => setCollectiveCategory(event.target.value)}><option value="">All garments</option>{garments.map(category => <option key={category} value={category}>{category}</option>)}</select></label>
+      <label>Occasion<select value={productCategory} onChange={event => setProductCategory(event.target.value)}><option value="">All occasions</option>{occasions.map(category => <option key={category} value={category}>{category}</option>)}</select></label>
+      <span className="eyebrow" aria-live="polite">{visibleProducts.length} {visibleProducts.length === 1 ? 'piece' : 'pieces'}</span>
+    </div>
+    {visibleProducts.length ? <div className="product-grid">{visibleProducts.map(product => <ProductCard key={product.id} product={product} />)}</div> : <p className="shop-empty">No pieces match these filters. Try another combination.</p>}
+  </section></main></Page>;
 }
 
 function ProductDetail({ product, bagCount, onAdd }) {
   const products = useContext(CatalogContext);
   const [size, setSize] = useState('Free');
-  return <Page active="shop" bagCount={bagCount}><main><div className="detail-layout"><div className="detail-gallery">{product.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${product.name}, view ${index + 1}`} />)}</div><aside className="detail-info"><span className="eyebrow">KishabySree / 0{products.indexOf(product) + 1}</span><h1>{product.name}</h1><span className="detail-price">{product.price}</span><p className="detail-copy">A five-metre handwoven saree with an easy drape, a clean blouse piece, and a border that carries the quiet ceremony of Kerala dressing.</p><div className="detail-rule"><div className="option-label"><span>Length</span><span>{size}</span></div><div className="sizes">{['Free', '5.5m', '6m'].map(option => <button className={`size ${size === option ? 'selected' : ''}`} key={option} onClick={() => setSize(option)}>{option}</button>)}</div></div><button className="add-button" onClick={onAdd}>Add to bag — {product.price}</button><div className="detail-note"><span>Free delivery over ₹5,000</span><span>Blouse piece included</span></div><div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description ↗</a></div></aside></div></main></Page>;
+  const isSaree = !product['collective-category'] || product['collective-category'] === 'Saree';
+  if (!isSaree) {
+    return <Page active="shop" bagCount={bagCount}><main><div className="detail-layout"><div className="detail-gallery">{product.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${product.name}, view ${index + 1}`} />)}</div><aside className="detail-info">
+      <span className="eyebrow">{product['collective-category']}{product['product-category'] ? ` / ${product['product-category']}` : ''}</span><h1>{product.name}</h1><span className="detail-price">{product.price}</span>
+      <p className="detail-copy">{product.description || `${product.color} · ${product.composition}`}</p>
+      <div className="detail-rule"><div className="option-label"><span>Composition</span><span>{product.composition}</span></div><div className="option-label"><span>Origin</span><span>{product.origin}</span></div></div>
+      <button className="add-button" onClick={onAdd}>Add to bag — {product.price}</button>
+      <div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description ↗</a></div>
+    </aside></div></main></Page>;
+  }
+  return <Page active="shop" bagCount={bagCount}><main><div className="detail-layout"><div className="detail-gallery">{product.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${product.name}, view ${index + 1}`} />)}</div><aside className="detail-info"><span className="eyebrow">KishabySree / 0{products.indexOf(product) + 1}</span><h1>{product.name}</h1><span className="detail-price">{product.price}</span><p className="detail-copy">{product.demo ? product.description : 'A five-metre handwoven saree with an easy drape, a clean blouse piece, and a border that carries the quiet ceremony of Kerala dressing.'}</p>{!product.demo && <div className="detail-rule"><div className="option-label"><span>Length</span><span>{size}</span></div><div className="sizes">{['Free', '5.5m', '6m'].map(option => <button className={`size ${size === option ? 'selected' : ''}`} key={option} onClick={() => setSize(option)}>{option}</button>)}</div></div>}<button className="add-button" onClick={onAdd}>Add to bag — {product.price}</button>{!product.demo && <div className="detail-note"><span>Free delivery over ₹5,000</span><span>Blouse piece included</span></div>}<div className="detail-rule"><a className="text-link" href={`#/product/${product.id}/description`}>Read the full description ↗</a></div></aside></div></main></Page>;
 }
 
 function Description({ product, bagCount }) {
-  return <Page active="shop" bagCount={bagCount}><main><section className="description-hero"><div><span className="eyebrow">The story of the {product.name}</span><h1>Made for<br />the <em>in-between.</em></h1></div><div className="description-lede"><span className="eyebrow">01 / The idea</span><p>Not a costume. Not a trend. A handwoven saree you can live in, restyle, and return to for years.</p></div></section><section className="materials"><img className="materials-image" src={product.images[1]} alt={`Close view of ${product.name} saree fabric`} /><div className="materials-copy"><span className="eyebrow">02 / In the details · തെയ്യം</span><h2>Texture you<br />can feel.</h2><p>Inspired by Kerala's handloom tradition, the gold edge of a kasavu saree, and the vivid geometry of Theyyam, we choose cloth for the way it lives with you.</p><div className="spec-list"><div className="spec-row"><span>Composition</span><span>{product.composition}</span></div><div className="spec-row"><span>Woven in</span><span>{product.origin}</span></div><div className="spec-row"><span>Border</span><span>Hand-finished zari edge</span></div><div className="spec-row"><span>Care</span><span>Cold wash, hang dry</span></div><div className="spec-row"><span>Fit</span><span>5.5m saree + 0.8m blouse piece</span></div></div></div></section></main></Page>;
+  if (product.demo || (product['collective-category'] && product['collective-category'] !== 'Saree')) {
+    return <Page active="shop" bagCount={bagCount}><main><section className="description-hero"><div><span className="eyebrow">The story of the {product.name}</span><h1>Made for<br /><em>the in-between.</em></h1></div><div className="description-lede"><span className="eyebrow">{product['collective-category']}{product['product-category'] ? ` / ${product['product-category']}` : ''}</span><p>{product.description || `${product.color} · ${product.composition}`}</p></div></section><section className="materials"><img className="materials-image" src={product.images[1] || product.images[0]} alt={`${product.name}, detail view`} /><div className="materials-copy"><span className="eyebrow">In the details</span><h2>Considered<br />for you.</h2><div className="spec-list"><div className="spec-row"><span>Composition</span><span>{product.composition}</span></div><div className="spec-row"><span>Origin</span><span>{product.origin}</span></div><div className="spec-row"><span>Colour</span><span>{product.color}</span></div></div></div></section></main></Page>;
+  }
+  return <Page active="shop" bagCount={bagCount}><main><section className="description-hero"><div><span className="eyebrow">The story of the {product.name}</span><h1>Made for<br />the <em>in-between.</em></h1></div><div className="description-lede"><span className="eyebrow">01 / The idea</span><p>Not a costume. Not a trend. A handwoven saree you can live in, restyle, and return to for years.</p></div></section><section className="materials"><img className="materials-image" src={product.images[1] || product.images[0]} alt={`Close view of ${product.name} saree fabric`} /><div className="materials-copy"><span className="eyebrow">02 / In the details · തെയ്യം</span><h2>Texture you<br />can feel.</h2><p>Inspired by Kerala's handloom tradition, the gold edge of a kasavu saree, and the vivid geometry of Theyyam, we choose cloth for the way it lives with you.</p><div className="spec-list"><div className="spec-row"><span>Composition</span><span>{product.composition}</span></div><div className="spec-row"><span>Woven in</span><span>{product.origin}</span></div><div className="spec-row"><span>Border</span><span>Hand-finished zari edge</span></div><div className="spec-row"><span>Care</span><span>Cold wash, hang dry</span></div><div className="spec-row"><span>Fit</span><span>5.5m saree + 0.8m blouse piece</span></div></div></div></section></main></Page>;
 }
 
 function BagPage({ bagItems, bagCount, onClear, onRemoveItem }) {
+  const products = useContext(CatalogContext);
   const subtotal = bagItems.reduce((sum, item) => {
     const priceNumber = Number(String(item.price).replace(/[^\d]/g, '')) || 0;
     return sum + (priceNumber * item.quantity);
@@ -128,6 +132,7 @@ function About({ bagCount }) {
 }
 
 function Journal({ bagCount }) {
+  const products = useContext(CatalogContext);
   const stories = [
     { label: '01 / Craft', title: 'The gold edge of Kerala', copy: 'A closer look at the kasavu border and the patient hands behind it.', image: products[0].images[1] },
     { label: '02 / Ritual', title: 'Dressing for the in-between', copy: 'On everyday ceremony, monsoon light, and finding your own drape.', image: products[1].images[1] },
@@ -140,11 +145,11 @@ function Page({ active, bagCount, children }) {
   return <div className="page"><Header active={active} bagCount={bagCount} />{children}<Footer /></div>;
 }
 
-function LittleSree({ isBagPage }) {
+function LittleSree({ isBagPage, isHomePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [messages, setMessages] = useState([{ role: 'assistant', content: "Namaskaram! I'm Little Sree, the KishabySree site guide. Ask me about our sarees, materials, prices, or details published here." }]);
+  const [messages, setMessages] = useState([{ role: 'assistant', content: "Namaskaram! I'm Little Sree, the KishabySree site guide. Ask me about our clothing, categories, materials, prices, or details published here." }]);
   const messagesRef = useRef(null);
 
   useEffect(() => {
@@ -176,7 +181,7 @@ function LittleSree({ isBagPage }) {
     }
   }
 
-  return <div className={`little-sree-widget ${isBagPage ? 'on-bag-page' : ''}`}>
+  return <div className={`little-sree-widget ${isBagPage ? 'on-bag-page' : ''} ${isHomePage ? 'on-home-page' : ''}`}>
     {isOpen && <section className="little-sree-panel" id="little-sree-panel" role="dialog" aria-modal="false" aria-labelledby="little-sree-title">
       <header className="little-sree-header">
         <span className="little-sree-mark" aria-hidden="true">LS</span>
@@ -193,7 +198,7 @@ function LittleSree({ isBagPage }) {
       </form>
       <span className="little-sree-note">AI guide · KishabySree topics only</span>
     </section>}
-    {!isOpen && <button className="little-sree-launcher" type="button" aria-expanded={false} aria-controls="little-sree-panel" onClick={() => setIsOpen(true)}>
+    {!isOpen && <button className="little-sree-launcher" type="button" aria-label="Open Little Sree chat" aria-expanded={false} aria-controls="little-sree-panel" onClick={() => setIsOpen(true)}>
       <Suspense fallback={<span className="kathakali-loading" aria-hidden="true" />}>
         <KathakaliMiniature />
       </Suspense>
@@ -208,7 +213,8 @@ function LittleSree({ isBagPage }) {
 function App() {
   const [bagItems, setBagItems] = useState([]);
   const [route, setRoute] = useState(window.location.hash);
-  const [catalog, setCatalog] = useState(products);
+  const [catalog, setCatalog] = useState(localProducts);
+  const [catalogError, setCatalogError] = useState('');
   const bagCount = bagItems.reduce((sum, item) => sum + item.quantity, 0);
 
   function addToBag(product) {
@@ -223,18 +229,33 @@ function App() {
 
   useEffect(() => { const updateRoute = () => setRoute(window.location.hash); window.addEventListener('hashchange', updateRoute); return () => window.removeEventListener('hashchange', updateRoute); }, []);
   useEffect(() => { window.scrollTo(0, 0); }, [route]);
-  useEffect(() => { fetchProducts().then(setCatalog).catch(() => setCatalog(products)); }, []);
-  const parts = route.replace(/^#\/?/, '').split('/').filter(Boolean);
+  useEffect(() => {
+    let active = true;
+    fetchProducts().then(result => {
+      if (active) setCatalog(result);
+    }).catch(error => {
+      console.error('Could not load the Firebase product catalog:', error);
+      if (active) {
+        setCatalog(localProducts);
+        setCatalogError('The live product catalog is unavailable. Showing preview products.');
+      }
+    });
+    return () => { active = false; };
+  }, []);
+  const [path, query] = route.replace(/^#\/?/, '').split('?', 2);
+  const parts = path.split('/').filter(Boolean);
+  const initialGarment = new URLSearchParams(query).get('garment') || '';
   const product = catalog.find(item => item.id === parts[1]) || catalog[0];
   return <CatalogContext.Provider value={catalog}>
+    {catalogError && <div className="catalog-error" role="alert">{catalogError}</div>}
     {parts[0] === 'about' && <About bagCount={bagCount} />}
     {parts[0] === 'journal' && <Journal bagCount={bagCount} />}
-    {parts[0] === 'shop' && <Shop bagCount={bagCount} />}
+    {parts[0] === 'shop' && <Shop bagCount={bagCount} initialGarment={initialGarment} />}
     {parts[0] === 'bag' && <BagPage bagItems={bagItems} bagCount={bagCount} onClear={() => setBagItems([])} onRemoveItem={id => setBagItems(current => current.filter(item => item.id !== id))} />}
     {parts[0] === 'product' && parts[2] && <Description product={product} bagCount={bagCount} />}
     {parts[0] === 'product' && !parts[2] && <ProductDetail product={product} bagCount={bagCount} onAdd={() => addToBag(product)} />}
     {!parts[0] && <Home bagCount={bagCount} />}
-    <LittleSree isBagPage={parts[0] === 'bag'} />
+    <LittleSree isBagPage={parts[0] === 'bag'} isHomePage={!parts[0]} />
   </CatalogContext.Provider>;
 }
 
